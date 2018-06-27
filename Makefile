@@ -18,10 +18,10 @@ endif
 
 compile: 
 ifeq ($(TECH),go)
-	make GO=true compile
+	make GO=true compile-image
 	$(eval imagename := aurbuilder-go)
 else
-	make compile
+	make compile-image
 	$(eval imagename := aurbuilder)
 endif
 	if [[ ! -d bin ]]; then mkdir bin; fi
@@ -32,6 +32,7 @@ endif
 	@echo 'then' >> bin/aurbuilder
 	@echo '    mkdir /tmp/aurbuilder' >> bin/aurbuilder
 	@echo 'fi' >> bin/aurbuilder
+	@echo 'chown $$(id -u):$$(id -g) -R /tmp/aurbuilder' >> bin/aurbuilder
 	@echo 'docker run --rm -ti -v /tmp/aurbuilder:/home/builder/store $(imagename) $$@'>> bin/aurbuilder
 	chmod +x bin/aurbuilder	
 

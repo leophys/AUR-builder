@@ -12,7 +12,7 @@ echo ====================================
 if test -v $PKG; then
     echo "No target aur package provided"
 else
-    cd workshop
+    cd store
     if ! test -d $PKG; then
         git clone https://aur.archlinux.org/$PKG.git $PKG
     fi
