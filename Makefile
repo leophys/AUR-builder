@@ -1,4 +1,7 @@
 go-compile:
+	$(shell if [[ ! -d docker/golang ]]; then \
+				mkdir -p docker/golang; \
+			fi)
 	$(shell cd aurbuilder \
 	&& go build \
 	&& mv aurbuilder ../docker/golang/)
@@ -28,12 +31,11 @@ endif
 	if [[ -f bin/aurbuilder ]]; then rm bin/aurbuilder; fi
 	@echo '#!/usr/bin/env bash' >> bin/aurbuilder
 	@echo '' >> bin/aurbuilder
-	@echo 'if [[ ! -d /tmp/aurbuilder ]]' >> bin/aurbuilder
+	@echo 'if [[ ! -d ~/.cache/aurbuilder ]]' >> bin/aurbuilder
 	@echo 'then' >> bin/aurbuilder
-	@echo '    mkdir /tmp/aurbuilder' >> bin/aurbuilder
+	@echo '    mkdir -p ~/.cache/aurbuilder' >> bin/aurbuilder
 	@echo 'fi' >> bin/aurbuilder
-	@echo 'chown $$(id -u):$$(id -g) -R /tmp/aurbuilder' >> bin/aurbuilder
-	@echo 'docker run --rm -ti -v /tmp/aurbuilder:/home/builder/store $(imagename) $$@'>> bin/aurbuilder
+	@echo 'docker run -ti -v ~/.cache/aurbuilder:/home/builder/store $(imagename) $$@'>> bin/aurbuilder
 	chmod +x bin/aurbuilder	
 
 install:

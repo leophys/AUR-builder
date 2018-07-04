@@ -20,9 +20,9 @@ var buildCmd = &cobra.Command{
 	Use:   "build",
 	Short: "Fetch and build a package from the AUR",
 	Long: `This command clones a git repo supposed to be located at
-	
+
 	https://aur.archlinux.org/$pkg.git
-	
+
 	and builds it with "makepkg -s".`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -74,6 +74,11 @@ func fetchSources(pkgName string, baseDir string) error {
 			}).Fatal("Home dir not found")
 		}
 		baseDir = home
+		log.WithFields(log.Fields{
+			"subcommand": "build",
+			"baseDir":    baseDir,
+			"home":       home,
+		}).Debug("baseDir is home")
 	}
 	log.WithFields(log.Fields{
 		"subcommand": "build",
@@ -138,18 +143,22 @@ func fetchSources(pkgName string, baseDir string) error {
 
 func doBuild(repoDir string) error {
 	os.Chdir(repoDir)
+	cwd, _ := os.Getwd()
+	log.WithFields(log.Fields{
+		"subcommand": "build",
+		"pwd":        cwd,
+	}).Info("Show build pwd")
+	fmt.Println("pwd: ", cwd)
 	makepkgCmd := exec.Command("makepkg", "-s")
-	if logLevel == "debug" {
-		makepkgCmd.Stdout = os.Stdout
-		makepkgCmd.Stderr = os.Stderr
-	}
+	makepkgCmd.Stdout = os.Stdout
+	makepkgCmd.Stderr = os.Stderr
 	err := makepkgCmd.Run()
 	if err != nil {
-		pwd, _ := os.Getwd()
 		log.WithFields(log.Fields{
 			"subcommand": "build",
-			"pwd":        pwd,
+			"pwd":        cwd,
 			"error":      err,
+			"test":       "test_field",
 		}).Error("Makepkg failed")
 	}
 	return err
@@ -164,8 +173,13 @@ func init() {
 	// and all subcommands, e.g.:
 	// buildCmd.PersistentFlags().String("foo", "", "A help for foo")
 	pwd, _ := os.Getwd()
-	buildCmd.Flags().StringVar(&baseDir, "basepath", pwd,
-		`Set the path where to store pkg 
+	log.WithFields(log.Fields{
+		"subcommand": "build",
+		"pwd":        pwd,
+	}).Debug("The current working directory")
+	defaultBasePath := filepath.Join(pwd, "store")
+	buildCmd.Flags().StringVar(&baseDir, "basepath", defaultBasePath,
+		`Set the path where to store pkg
 		git repositories cloned from source.`)
 
 	// Cobra supports local flags which will only run when this command
