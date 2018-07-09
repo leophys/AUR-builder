@@ -150,6 +150,7 @@ func doBuild(repoDir string) error {
 	}).Info("Show build pwd")
 	fmt.Println("pwd: ", cwd)
 	makepkgCmd := exec.Command("makepkg", "-s")
+    makepkgCmd.Stdin  = os.Stdin
 	makepkgCmd.Stdout = os.Stdout
 	makepkgCmd.Stderr = os.Stderr
 	err := makepkgCmd.Run()
