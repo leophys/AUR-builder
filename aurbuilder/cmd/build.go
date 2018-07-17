@@ -40,6 +40,14 @@ var buildCmd = &cobra.Command{
 				"pkg":        pkgName,
 			}).Fatal("Fetch pkg failed")
 		}
+		err = updatePacman()
+		if err != nil {
+			log.WithFields(log.Fields{
+				"subcommand": "build",
+				"error":      err,
+				"pkg":        pkgName,
+			}).Error("Package database sync failed")
+		}
 		err = doBuild(filepath.Join(baseDir, pkgName))
 		if err != nil {
 			log.WithFields(log.Fields{
@@ -141,6 +149,15 @@ func fetchSources(pkgName string, baseDir string) error {
 	return err
 }
 
+func updatePacman() error {
+	updatePacmanCmd := exec.Command("/bin/sh -c", "pacman", "-Sy")
+	updatePacmanCmd.Stdin  = os.Stdin
+	updatePacmanCmd.Stdout = os.Stdout
+	updatePacmanCmd.Stderr = os.Stderr
+	err := updatePacmanCmd.Run()
+	return err
+}
+
 func doBuild(repoDir string) error {
 	os.Chdir(repoDir)
 	cwd, _ := os.Getwd()
@@ -150,7 +167,7 @@ func doBuild(repoDir string) error {
 	}).Info("Show build pwd")
 	fmt.Println("pwd: ", cwd)
 	makepkgCmd := exec.Command("makepkg", "-s")
-    makepkgCmd.Stdin  = os.Stdin
+	makepkgCmd.Stdin  = os.Stdin
 	makepkgCmd.Stdout = os.Stdout
 	makepkgCmd.Stderr = os.Stderr
 	err := makepkgCmd.Run()
