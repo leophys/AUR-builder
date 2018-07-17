@@ -150,7 +150,7 @@ func fetchSources(pkgName string, baseDir string) error {
 }
 
 func updatePacman() error {
-	updatePacmanCmd := exec.Command("/bin/sh -c", "pacman", "-Sy")
+	updatePacmanCmd := exec.Command("/usr/bin/sh -c", "pacman", "-Sy")
 	updatePacmanCmd.Stdin  = os.Stdin
 	updatePacmanCmd.Stdout = os.Stdout
 	updatePacmanCmd.Stderr = os.Stderr
