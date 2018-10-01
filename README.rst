@@ -31,7 +31,7 @@ If you want to use the go package for the juicy stuff you'll need also go instal
 
 .. code:: bash
 
-    git clone https://github.com/leophys/AUR-builder
+    git clone --recursive https://github.com/leophys/AUR-builder
     cd AUR-builder
     make TECH=go compile
     sudo make install
