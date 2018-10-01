@@ -1,6 +1,6 @@
 package main
 
-import "github.com/leophys/AUR-builder/aurbuilder/cmd"
+import "github.com/leophys/aurbuilder/cmd"
 
 func main() {
 	cmd.Execute()

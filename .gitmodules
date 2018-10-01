@@ -1,0 +1,3 @@
+[submodule "aurbuilder"]
+    path = aurbuilder
+    url = https://github.com/leophys/aurbuilder.git
