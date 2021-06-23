@@ -33,7 +33,7 @@ endif
 	@echo '' >> bin/aurbuilder
 	@echo 'if [[ ! -d ~/.cache/aurbuilder ]]' >> bin/aurbuilder
 	@echo 'then' >> bin/aurbuilder
-	@echo '    mkdir -p ~/.cache/aurbuilder' >> bin/aurbuilder
+	@echo '    mkdir -p ~/.cache/aurbuilder && chmod 777 ~/.cache/aurbuilder' >> bin/aurbuilder
 	@echo 'fi' >> bin/aurbuilder
 	@echo 'docker run -ti -v ~/.cache/aurbuilder:/home/builder/store $(imagename) $$@'>> bin/aurbuilder
 	chmod +x bin/aurbuilder	
