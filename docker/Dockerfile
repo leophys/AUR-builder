@@ -1,4 +1,4 @@
-FROM base/archlinux:latest
+FROM archlinux:base
 
 ARG USERID="1000"
 ARG BUILD_TYPE
